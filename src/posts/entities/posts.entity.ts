@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -28,8 +29,10 @@ export class Posts {
   updatedAt: Date;
 
   @ManyToOne(() => Categories, (category) => category.post)
+  @JoinColumn()
   category: Categories;
 
   @ManyToOne(() => SubCategories, (subCategory) => subCategory.post)
+  @JoinColumn()
   subCategory: SubCategories;
 }
