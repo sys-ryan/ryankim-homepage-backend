@@ -1,6 +1,14 @@
 import { Categories } from "src/categories/entities/categories.entity";
 import { Posts } from "src/posts/entities/posts.entity";
-import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  RelationId,
+} from "typeorm";
 
 @Entity()
 export class SubCategories {
@@ -10,8 +18,11 @@ export class SubCategories {
   @Column({ type: "varchar" })
   title: string;
 
-  @OneToOne(() => Categories, (category) => category.subCategory)
+  @ManyToOne(() => Categories, (category) => category.subCategories)
   category: Categories;
+
+  @RelationId((subCategory: SubCategories) => subCategory.category)
+  categoryId: number;
 
   @OneToMany(() => Posts, (post) => post.category)
   post: Posts;
