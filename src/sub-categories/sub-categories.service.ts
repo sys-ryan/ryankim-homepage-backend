@@ -1,11 +1,18 @@
-import { Injectable } from '@nestjs/common';
-import { CreateSubCategoryDto } from './dto/create-sub-category.dto';
-import { UpdateSubCategoryDto } from './dto/update-sub-category.dto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { CreateSubCategoryDto } from "./dto/create-sub-category.dto";
+import { UpdateSubCategoryDto } from "./dto/update-sub-category.dto";
+import { SubCategories } from "./entities/sub-categories.entity";
 
 @Injectable()
 export class SubCategoriesService {
+  constructor(
+    @InjectRepository(SubCategories) private subCategoriesRepository: Repository<SubCategories>
+  ) {}
+
   create(createSubCategoryDto: CreateSubCategoryDto) {
-    return 'This action adds a new subCategory';
+    return "This action adds a new subCategory";
   }
 
   findAll() {
@@ -13,7 +20,16 @@ export class SubCategoriesService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} subCategory`;
+    return `find one sub category`;
+  }
+
+  async findOneByTitle(title: string) {
+    const subCategory = await this.subCategoriesRepository.findOne({ where: { title } });
+    if (!subCategory) {
+      throw new NotFoundException("SubCategory not found.");
+    }
+
+    return subCategory;
   }
 
   update(id: number, updateSubCategoryDto: UpdateSubCategoryDto) {

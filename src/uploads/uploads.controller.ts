@@ -1,5 +1,5 @@
-import { Controller, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
+import { Controller, Post, UploadedFile, UploadedFiles, UseInterceptors } from "@nestjs/common";
+import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 
 import * as multerS3 from "multer-s3";
 import * as AWS from "aws-sdk";
@@ -17,20 +17,41 @@ const s3 = new AWS.S3();
 export class UploadsController {
   constructor(private uploadsService: UploadsService) {}
 
-  @Post()
+  // @Post("/:category/:subCategory/:filename")
+  // @UseInterceptors(
+  //   FileInterceptor("file", {
+  //     storage: multerS3({
+  //       s3: s3,
+  //       bucket: process.env.AWS_S3_BUCKET_NAME,
+  //       acl: "public-read",
+  //       key: (req, file, cb) => {
+  //         const { category, subCategory, filename } = req.params;
+  //         const saveFilename = `${category}/${subCategory}/${filename ?? file.originalname}`;
+  //         cb(null, saveFilename);
+  //       },
+  //     }),
+  //   })
+  // )
+  // async uploadFile(@UploadedFile() file: Express.Multer.File) {
+  //   return this.uploadsService.uploadFile(file);
+  // }
+
+  @Post("/files/:category/:subCategory")
   @UseInterceptors(
-    FileInterceptor("file", {
+    FilesInterceptor("files", 30, {
       storage: multerS3({
         s3: s3,
         bucket: process.env.AWS_S3_BUCKET_NAME,
         acl: "public-read",
         key: (req, file, cb) => {
-          cb(null, file.originalname);
+          const { category, subCategory } = req.params;
+          const saveFilename = `${category}/${subCategory}/${file.originalname}`;
+          cb(null, saveFilename);
         },
       }),
     })
   )
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    return this.uploadsService.uploadFile(file);
+  async uploadFiles(@UploadedFiles() files: Express.Multer.File) {
+    return this.uploadsService.uploadFiles(files);
   }
 }

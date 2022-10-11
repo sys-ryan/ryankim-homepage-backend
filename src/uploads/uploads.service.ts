@@ -14,4 +14,9 @@ export class UploadsService {
   async uploadFile(file) {
     return file;
   }
+
+  async uploadFiles(files) {
+    const response = files.map((file) => file.location);
+    return response;
+  }
 }
