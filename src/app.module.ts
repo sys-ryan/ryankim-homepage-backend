@@ -7,6 +7,7 @@ import { DatabaseModule } from './database/database.module';
 import { PostsModule } from './posts/posts.module';
 import { CategoriesModule } from './categories/categories.module';
 import { SubCategoriesModule } from './sub-categories/sub-categories.module';
+import { UploadsModule } from './uploads/uploads.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { SubCategoriesModule } from './sub-categories/sub-categories.module';
     PostsModule,
     CategoriesModule,
     SubCategoriesModule,
+    UploadsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
