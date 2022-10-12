@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CategoriesService } from "src/categories/categories.service";
 import { Categories } from "src/categories/entities/categories.entity";
@@ -33,12 +33,23 @@ export class PostsService {
     return { message: "The post was successfully created." };
   }
 
-  findAll() {
-    return `This action returns all posts`;
+  async findAll() {
+    // TODO: pagination
+    // TODO: filtering
+    const posts = await this.postsRepository.find({ relations: ["category", "subCategory"] });
+    return posts;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: number) {
+    const post = await this.postsRepository.findOne({
+      where: { id },
+      relations: ["category", "subCategory"],
+    });
+    if (!post) {
+      throw new NotFoundException("Post not found.");
+    }
+
+    return post;
   }
 
   update(id: number, updatePostDto: UpdatePostDto) {
