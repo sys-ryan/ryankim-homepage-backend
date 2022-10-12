@@ -23,9 +23,6 @@ export class PostsController {
   @HttpCode(201)
   @UseInterceptors(FileInterceptor("markdown"))
   create(@UploadedFile() file: Express.Multer.File, @Body() createPostDto: CreatePostDto) {
-    // console.log(file.buffer.toString());
-    // console.log(createPostDto);
-
     const markdown = file.buffer.toString();
 
     return this.postsService.create(markdown, createPostDto);
@@ -33,6 +30,8 @@ export class PostsController {
 
   @Get()
   findAll() {
+    // TODO: pagination
+    // TODO: filtering
     return this.postsService.findAll();
   }
 

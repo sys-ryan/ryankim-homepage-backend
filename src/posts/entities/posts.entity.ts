@@ -22,6 +22,12 @@ export class Posts {
   @Column({ type: "text" })
   markdown: string;
 
+  @Column({ type: "varchar", length: 255 })
+  thumbnail: string;
+
+  @Column({ type: "varchar", length: 255 })
+  excerpt: string;
+
   @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
 
