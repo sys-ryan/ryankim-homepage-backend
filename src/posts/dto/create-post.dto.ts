@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from "class-validator";
+import { IsNumber, IsString, IsUrl } from "class-validator";
 
 export class CreatePostDto {
   @IsString()
@@ -6,6 +6,12 @@ export class CreatePostDto {
 
   @IsString()
   category: string;
+
+  @IsUrl()
+  thumbnail: string;
+
+  @IsString()
+  excerpt: string;
 
   @IsString()
   subCategory: string;
