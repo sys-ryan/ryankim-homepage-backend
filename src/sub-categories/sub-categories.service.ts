@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { CategoriesService } from "src/categories/categories.service";
 import { Repository } from "typeorm";
 import { CreateSubCategoryDto } from "./dto/create-sub-category.dto";
 import { UpdateSubCategoryDto } from "./dto/update-sub-category.dto";
@@ -8,15 +9,24 @@ import { SubCategories } from "./entities/sub-categories.entity";
 @Injectable()
 export class SubCategoriesService {
   constructor(
-    @InjectRepository(SubCategories) private subCategoriesRepository: Repository<SubCategories>
+    @InjectRepository(SubCategories) private subCategoriesRepository: Repository<SubCategories>,
+    private categoriesService: CategoriesService
   ) {}
 
-  create(createSubCategoryDto: CreateSubCategoryDto) {
-    return "This action adds a new subCategory";
+  async create(createSubCategoryDto: CreateSubCategoryDto): Promise<void> {
+    const category = await this.categoriesService.findOneByTitle(createSubCategoryDto.category);
+
+    const subCategory = await this.subCategoriesRepository.create({
+      title: createSubCategoryDto.title,
+      category,
+    });
+
+    await this.subCategoriesRepository.save(subCategory);
   }
 
-  findAll() {
-    return `This action returns all subCategories`;
+  async findAll(): Promise<SubCategories[]> {
+    const subCategories = await this.subCategoriesRepository.find();
+    return subCategories;
   }
 
   findOne(id: number) {
