@@ -23,6 +23,8 @@ export class PostsService {
 
     const newPsot = await this.postsRepository.create({
       title: createPostDto.title,
+      thumbnail: createPostDto.thumbnail,
+      excerpt: createPostDto.excerpt,
       markdown,
       category,
       subCategory,
