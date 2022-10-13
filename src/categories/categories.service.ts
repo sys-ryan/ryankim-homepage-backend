@@ -9,12 +9,15 @@ import { Categories } from "./entities/categories.entity";
 export class CategoriesService {
   constructor(@InjectRepository(Categories) private categoriesRepository: Repository<Categories>) {}
 
-  create(createCategoryDto: CreateCategoryDto) {
-    return "This action adds a new category";
+  async create(createCategoryDto: CreateCategoryDto): Promise<void> {
+    const category = await this.categoriesRepository.create(createCategoryDto);
+    await this.categoriesRepository.save(category);
   }
 
-  findAll() {
-    return `This action returns all categories`;
+  async findAll(): Promise<Categories[]> {
+    const categories = await this.categoriesRepository.find();
+
+    return categories;
   }
 
   findOne(id: number) {
