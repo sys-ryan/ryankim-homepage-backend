@@ -21,6 +21,8 @@ export class PostsService {
     const category = await this.categoriesService.findOneByTitle(createPostDto.category);
     const subCategory = await this.subCategoriesService.findOneByTitle(createPostDto.subCategory);
 
+    console.log(createPostDto.thumbnail);
+    console.log(createPostDto.excerpt);
     const newPsot = await this.postsRepository.create({
       title: createPostDto.title,
       thumbnail: createPostDto.thumbnail,
@@ -38,7 +40,10 @@ export class PostsService {
   async findAll() {
     // TODO: pagination
     // TODO: filtering
-    const posts = await this.postsRepository.find({ relations: ["category", "subCategory"] });
+    const posts = await this.postsRepository.find({
+      relations: ["category", "subCategory"],
+      order: { createdAt: "DESC" },
+    });
     return posts;
   }
 
