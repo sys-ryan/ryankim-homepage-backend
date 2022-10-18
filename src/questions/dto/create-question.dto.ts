@@ -5,10 +5,9 @@ import * as sanitizeHtml from "sanitize-html";
 export class CreateQuestionDto {
   @IsString()
   @Transform(({ value }) => {
-    return sanitizeHtml(value, {
-      allowedTags: [],
-      allowedAttributes: {},
-    });
+    let data = sanitizeHtml(value);
+    data = data.trim();
+    return data;
   })
   name: string;
 
@@ -17,10 +16,9 @@ export class CreateQuestionDto {
 
   @IsString()
   @Transform(({ value }) => {
-    return sanitizeHtml(value, {
-      allowedTags: [],
-      allowedAttributes: {},
-    });
+    let data = sanitizeHtml(value);
+    data = data.trim();
+    return data;
   })
   message: string;
 }
