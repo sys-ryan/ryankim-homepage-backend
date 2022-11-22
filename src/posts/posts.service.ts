@@ -1,8 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CategoriesService } from "src/categories/categories.service";
-import { Categories } from "src/categories/entities/categories.entity";
-import { SubCategories } from "src/sub-categories/entities/sub-categories.entity";
 import { SubCategoriesService } from "src/sub-categories/sub-categories.service";
 import { Repository } from "typeorm";
 import { CreatePostDto } from "./dto/create-post.dto";
@@ -17,24 +15,44 @@ export class PostsService {
     private subCategoriesService: SubCategoriesService
   ) {}
 
-  async create(markdown: string, createPostDto: CreatePostDto) {
-    const category = await this.categoriesService.findOneByTitle(createPostDto.category);
-    const subCategory = await this.subCategoriesService.findOneByTitle(createPostDto.subCategory);
+  // async create(markdown: string, createPostDto: CreatePostDto) {
+  //   const category = await this.categoriesService.findOneByTitle(createPostDto.category);
+  //   const subCategory = await this.subCategoriesService.findOneByTitle(createPostDto.subCategory);
 
-    console.log(createPostDto.thumbnail);
-    console.log(createPostDto.excerpt);
-    const newPsot = await this.postsRepository.create({
-      title: createPostDto.title,
-      thumbnail: createPostDto.thumbnail,
-      excerpt: createPostDto.excerpt,
-      markdown,
-      category,
-      subCategory,
+  //   console.log(createPostDto.thumbnail);
+  //   console.log(createPostDto.excerpt);
+  //   const newPsot = await this.postsRepository.create({
+  //     title: createPostDto.title,
+  //     thumbnail: createPostDto.thumbnail,
+  //     excerpt: createPostDto.excerpt,
+  //     markdown,
+  //     category,
+  //     subCategory,
+  //   });
+
+  //   await this.postsRepository.save(newPsot);
+
+  //   return { message: "The post was successfully created." };
+  // }
+
+  async create(createPostDto: CreatePostDto): Promise<void> {
+    const { title, category, subCategory, thumbnail, markdown, excerpt } = createPostDto;
+
+    const _category = await this.categoriesService.findOneByTitle(category)
+    const _subCategory = await this.subCategoriesService.findOneByTitle(subCategory);
+
+    const newPost = await this.postsRepository.create({
+      title,
+      thumbnail,
+      category: _category,
+      subCategory: _subCategory,
+      excerpt,
+      markdown
     });
 
-    await this.postsRepository.save(newPsot);
+    await this.postsRepository.save(newPost);
 
-    return { message: "The post was successfully created." };
+    return;
   }
 
   async findAll() {

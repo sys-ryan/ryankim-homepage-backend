@@ -19,13 +19,20 @@ import { FileInterceptor } from "@nestjs/platform-express";
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
+  // @Post()
+  // @HttpCode(201)
+  // @UseInterceptors(FileInterceptor("markdown"))
+  // create(@UploadedFile() file: Express.Multer.File, @Body() createPostDto: CreatePostDto) {
+  //   const markdown = file.buffer.toString();
+
+  //   return this.postsService.create(markdown, createPostDto);
+  // }
+
   @Post()
   @HttpCode(201)
-  @UseInterceptors(FileInterceptor("markdown"))
-  create(@UploadedFile() file: Express.Multer.File, @Body() createPostDto: CreatePostDto) {
-    const markdown = file.buffer.toString();
-
-    return this.postsService.create(markdown, createPostDto);
+  create(@Body() createPostDto: CreatePostDto) {
+    // console.log(createPostDto)
+    return this.postsService.create(createPostDto);
   }
 
   @Get()
